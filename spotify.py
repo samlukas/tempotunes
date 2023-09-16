@@ -13,22 +13,24 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=cred.client_id, client_
 
 def get_songs():
     system_msg = 'You are a helpful song guru that specializes on bpm'
-    user_msg = 'Give me a list of popular rap songs with a bpm of 104'
+    user_msg = 'Give me a list of popular rap songs with 104 bpm'
 
     response = openai.ChatCompletion.create(model="gpt-4-0613",
                                             messages=[{"role": "system", "content": system_msg},
                                             {"role": "user", "content": user_msg}])
 
-    return response
-    # songs = response["choices"][0]["message"]["content"]
-    # song = songs[3:songs.find("\n2")]
-    # name = song[1:songs.find("\"", 2)]
-    # if 'feat.' in song:
-    #     artist = song[len(name) + 5: song.find("feat.") - 1]
-    # else:
-    #     artist = song[len(name) + 5:]
+    #response is a json
+    #here we parse the json for artist and song name
+    songs = response["choices"][0]["message"]["content"]
 
-    # return (name.replace(" ", "%20"), artist.replace(" ", "%20"))
+    song = songs[songs.find("\n1.") + 4: songs.find("\n2")]
+    name = song[1:song.find("\"", 2)]
+    if 'feat.' in song:
+        artist = song[len(name) + 5: song.find("feat.") - 1]
+    else:
+        artist = song[len(name) + 5:]
+
+    return (name.replace(" ", "%20"), artist.replace(" ", "%20"))
 
 def get_token():
     auth_string = cred.client_id + ":" + cred.client_secret
@@ -53,9 +55,12 @@ def get_auth_header(token):
 def search(token):
     name, artist = get_songs()
 
+    n_name = name.replace('\'', '')
+    n_artist = artist.replace('\'', '')
+
     url = 'https://api.spotify.com/v1/search'
     headers = get_auth_header(token)
-    query = f"?q=track:{name}%20artist:{artist}&type=track&limit=1"
+    query = f"?q=track:{n_name}%20artist:{n_artist}&type=track&limit=1"
 
     query_url = url + query
     result = get(query_url, headers=headers)
@@ -64,7 +69,7 @@ def search(token):
     if len(json_result) == 0:
         return 'error'
     
-    return json_result
+    return json_result['tracks']['items'][0]['album']['artists'][0]['uri']
 
 def add_to_q(token, uri):
     url = 'https://api.spotify.com/v1/me/player/queue'
@@ -76,9 +81,9 @@ def add_to_q(token, uri):
     return json_result
 
 
-token = get_token()
-result = search(token)
-print(result)
+# token = get_token()
+# print(token)
+# result = search(token)
+# print(result)
 # test = add_to_q(token, result)
 # print(test)
-# ['tracks']['items'][0]['album']['artists'][0]['uri']

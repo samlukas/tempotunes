@@ -7,7 +7,7 @@ import json
 import openai
 
 
-scope = "user-read-recently-played"
+scope = "app-remote-control"
 openai.api_key = cred.openai_api_key
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=cred.client_id, client_secret= cred.client_secret, redirect_uri=cred.redirect_url, scope=scope))
 
@@ -78,7 +78,8 @@ def add_to_q(token, uri):
     result = post(url + '?uri=' + uri, headers=headers)
     json_result = json.loads(result.content)
 
-    return json_result
+    sp.add_to_queue(uri)
+    # return json_result
 
 
 # token = get_token()
@@ -87,3 +88,6 @@ def add_to_q(token, uri):
 # print(result)
 # test = add_to_q(token, result)
 # print(test)
+# 'BQCAwaJA9nJfOPheEtZRaOgt_bir2PqU--Sqnaody6klMvLwbBHzAKvdCBX6NDcOzypTKz1Hecr8tjJ-Uzb7Oi8VOR6vV_Qb65Vsn-ltKwQI7AEUjY4'
+# 'spotify:artist:6l3HvQ5sa6mXTsMTB19rO5'
+

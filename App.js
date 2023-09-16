@@ -5,10 +5,12 @@ import { Pedometer } from 'expo-sensors';
 export default function App() {
   const [isPedometerAvailable, setIsPedometerAvailable] = useState('checking');
   const [pastStepCount, setPastStepCount] = useState(0);
-  var beforeStepCount = 0;
-  const [bpm, setbpm] = useState(0);
   const [currentStepCount, setCurrentStepCount] = useState(0);
-  var currentStepCount2 = useRef(0);
+  const [bpm, setbpm] = useState(0);
+
+  const isCalculating = useRef(false);
+  const canFinishCalculation = useRef(false);
+  const prevSteps = useRef(0);
 
   const subscribe = async () => {
     const isAvailable = await Pedometer.isAvailableAsync();
@@ -23,20 +25,27 @@ export default function App() {
       if (pastStepCountResult) {
         setPastStepCount(pastStepCountResult.steps);
       }
-      var sec = new Date().getSeconds()
       // console.log(sec)
 
       // beforeStepCount = currentStepCount
       // console.log('Hello')
-      setTimeout(() => {  
-        console.log('World!'); 
-        setbpm(currentStepCount * 6)
-      }, 10000);
+      console.log(prevSteps.current);
       return Pedometer.watchStepCount(result => {
         setCurrentStepCount(result.steps);
-        currentStepCount2 = result.steps;
-        setbpm(currentStepCount2 * 6);
-        console.log(currentStepCount2); 
+        if (!isCalculating.current && !canFinishCalculation.current) {
+          console.log("wdwd");
+          isCalculating.current = true;
+          prevSteps.current = result.steps;
+          setTimeout(() => {  
+            isCalculating.current = false;
+            canFinishCalculation.current = true;
+          }, 10000);
+        }
+        if (canFinishCalculation.current) {
+          setbpm((result.steps - prevSteps.current) * 5.7);
+          console.log((result.steps - prevSteps.current) * 5.7);
+          canFinishCalculation.current = false;
+        }
       });
     }
   };
@@ -49,7 +58,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
-      <Text>Steps taken in the last 24 hours: {pastStepCount}</Text>
+      <Text>Step taken in the last 24 hours: {pastStepCount}</Text>
       <Text>Walk! And watch this go up: {currentStepCount}</Text>
       <Text>BPM: {bpm}</Text>
     </View>

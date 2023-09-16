@@ -1,8 +1,13 @@
 import { useState, useEffect, useRef} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Pedometer } from 'expo-sensors';
+import Login from "./Login.js";
+import * as React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
   const [isPedometerAvailable, setIsPedometerAvailable] = useState('checking');
   const [pastStepCount, setPastStepCount] = useState(0);
   const [currentStepCount, setCurrentStepCount] = useState(0);
@@ -56,14 +61,25 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
-      <Text>Step taken in the last 24 hours: {pastStepCount}</Text>
-      <Text>Walk! And watch this go up: {currentStepCount}</Text>
-      <Text>BPM: {bpm}</Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {/* <View style={styles.container}>
+          <Text>Pedometer.isAvailableAsync(): {isPedometerAvailable}</Text>
+          <Text>Step taken in the last 24 hours: {pastStepCount}</Text>
+          <Text>Walk! And watch this go up: {currentStepCount}</Text>
+          <Text>BPM: {bpm}</Text>
+          <Text>DWDWD</Text>
+        </View> */}
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{title: 'Welcome'}}
+        />
+        {/* <Stack.Screen name="Profile" component={ProfileScreen} /> */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

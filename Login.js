@@ -16,9 +16,9 @@ const discovery = {
   tokenEndpoint: 'https://accounts.spotify.com/api/token',
 };
 
-export default function Login () {
+export default function Login ( {navigation} ) {
   const redirectUri = makeRedirectUri({preferLocalhost: true})
-  const clientId = process.env.REACT_APP_CLIENT_ID
+  const clientId = '7decfe78bc194deda3d160308727d5ae'
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: clientId,
@@ -53,12 +53,13 @@ export default function Login () {
       setSpotifyCode(code)
       // requestSpotifyToken()
       refreshSpotifyToken()
+      navigation.navigate("Home");
     }
   }, [response]);
 
   // {"authentication": null, "error": null, "errorCode": null, "params": {"code": "AQCa62anD26QJCPcJA45ue_IQv1A2JShBMso1TqH4oJyvFh1avGT33Yi7S1QY8vdCmQlJUJf3EugF_YA91r-owctUN4B6b_-iVVAR7hR56DqznXtvOOJ7yN_Tcyadko6Y97rJsr-GzPF5AhG9WIfG-fDAhUwJkOzxMzmW6FnHANqdveYM2UB0Zog97ubc9I1mumii-12BFRl0BzsTQfcc10", "state": "PT5pQnfCAp"}, "type": "success", "url": "exp://localhost:8081/?code=AQCa62anD26QJCPcJA45ue_IQv1A2JShBMso1TqH4oJyvFh1avGT33Yi7S1QY8vdCmQlJUJf3EugF_YA91r-owctUN4B6b_-iVVAR7hR56DqznXtvOOJ7yN_Tcyadko6Y97rJsr-GzPF5AhG9WIfG-fDAhUwJkOzxMzmW6FnHANqdveYM2UB0Zog97ubc9I1mumii-12BFRl0BzsTQfcc10&state=PT5pQnfCAp"}
   const requestSpotifyToken = () => {
-    const clientSecret = process.env.REACT_APP_CLIENT_SECRET
+    const clientSecret = 'dd311c57af514b56b155a601a73fa323'
     const clientInfo = clientId + ':' + clientSecret
     const requestOptions = {
       method: 'POST',
@@ -69,10 +70,10 @@ export default function Login () {
     fetch(discovery.tokenEndpoint, requestOptions)
     .then(response => response.json())
     .then(response => console.log('request spotify token response', response))
-  } 
+  }
 
   const refreshSpotifyToken = () => {
-    const clientSecret = process.env.REACT_APP_CLIENT_SECRET
+    const clientSecret = 'dd311c57af514b56b155a601a73fa323'
     const clientInfo = clientId + ':' + clientSecret
     const requestOptions = {
       method: 'POST',

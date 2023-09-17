@@ -48,7 +48,7 @@ export default function Login ( {navigate} ) {
                 }, 10000);
                 }
                 if (canFinishCalculation.current) {
-                setbpm((result.steps - prevSteps.current) * 5.7);
+                setbpm(Math.round((result.steps - prevSteps.current) * 5.7));
                 console.log((result.steps - prevSteps.current) * 5.7);
                 canFinishCalculation.current = false;
                 }

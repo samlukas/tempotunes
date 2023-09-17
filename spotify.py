@@ -5,8 +5,15 @@ import base64
 from requests import post, get
 import json
 import openai
+from flask import Flask, request, jsonify, render_template
+import sys
+from pymongo import MongoClient
+from flask_cors import CORS
 
 
+
+app = Flask(__name__)
+CORS(app)
 scope = "app-remote-control"
 openai.api_key = cred.openai_api_key
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=cred.client_id, client_secret= cred.client_secret, redirect_uri=cred.redirect_url, scope=scope))
@@ -31,6 +38,21 @@ def get_songs():
         artist = song[len(name) + 5:]
 
     return (name.replace(" ", "%20"), artist.replace(" ", "%20"))
+
+
+
+@app.route("/", methods=["GET", "POST"])
+def getBPM():
+    if request.method=="POST":
+        data={}
+        data['bpm']=request.json['bpm']
+        print(data, file=sys.stderr)
+        return jsonify(data)
+    else:
+        return render_template("localhost:5000")
+
+        
+
 
 def get_token():
     auth_string = cred.client_id + ":" + cred.client_secret
@@ -80,6 +102,16 @@ def add_to_q(token, uri):
 
     sp.add_to_queue(uri)
     # return json_result
+
+def database_filler(uri):
+    Client=MongoClient('localhost', 27017)
+    db=Client['test']
+    collection=db['songs']
+    insert_result = collection.insert_one({"spotify_uri": uri})
+    return insert_result
+
+if __name__ =='__main__':
+    app.run(debug=True, port=5000)
 
 
 # token = get_token()

@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, TouchableOpacity,} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Linking } from 'react-native';
 // import * as AuthSession from 'expo-auth-session';
@@ -86,22 +86,32 @@ export default function Login () {
   } 
 
     return (
-        <View Style = {styles.container}>
-            <Button
-              title="login" 
-              onPress={() => {
-                promptAsync();
-              }}
-            />
+        <View style = {styles.background}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => promptAsync()}>
+                <Text>Login to Spotify</Text>
+            </TouchableOpacity>
             <StatusBar style="auto"/>
         </View>
     );
 }
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    marginTop: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'black'
   },
+  button: {
+    alignItems: 'center',
+    backgroundColor: '#06AF3C',
+    height: 50,
+    width: 150,
+    marginTop: 250,
+    marginLeft: 100,
+    borderTopRightRadius:  10,
+    borderBottomRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    justifyContent: 'center',
+  }
 });

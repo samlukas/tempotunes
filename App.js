@@ -17,11 +17,11 @@ export default function App() {
           <Text>BPM: {bpm}</Text
           <Text>DWDWD</Text>
         </View> */}
-        {/* <Stack.Screen
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{title: 'Welcome to TempoTunes'}}
-        /> */}
+        />
         <Stack.Screen name="Home" component={Home} 
           options={{title: 'Welcome to TempoTunes'}}
         />

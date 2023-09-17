@@ -7,9 +7,7 @@ import * as React from 'react';
 
 export default function Login ( {navigate} ) {
 
-    const [headerMessageBeforeRun, setHeaderMessageBeforeRun] = useState(true);
-    const [SPMMessageOn, setSPMMessage] = useState(true);
-    const [SPMDisplay, setSPMDisplay] = useState(true);
+    const [bpmOff, setbpmOff] = useState(true);
 
     const [isPedometerAvailable, setIsPedometerAvailable] = useState('checking');
     const [pastStepCount, setPastStepCount] = useState(0);
@@ -36,7 +34,7 @@ export default function Login ( {navigate} ) {
             // console.log(sec)
 
             // beforeStepCount = currentStepCount
-            // console.log('Hello')
+            // console.log('Hello'))
             console.log(prevSteps.current);
             return Pedometer.watchStepCount(result => {
                 setCurrentStepCount(result.steps);
@@ -66,28 +64,34 @@ export default function Login ( {navigate} ) {
     return (
         <View style = {styles.container}>
             {
-                headerMessageBeforeRun ? (
-                    <Text style = {styles.messages}>Welcome, start running! {"\n"} Within 30 seconds of running your rhythmic beats will come!</Text>
-                    ): null
+                bpmOff ? (
+                    <Text style = {styles.messages}>Welcome to TempoTunes, when you are ready to run press start!</Text>
+                    ): <Text style = {styles.messages}>Boom! {"\n"} Within 30 seconds of running your rhythmic beats will magically appear!</Text>
             }
             {
-                SPMMessageOn ? (
-                    <Text style = {styles.bpm}>SPM</Text>
-                    ): null
+                bpmOff ? (
+                    null
+                    ): <Text style = {styles.bpm}>SPM</Text>
             }
             {
-                SPMMessageOn ? (
-                    <Text style = {styles.bpm_footnote}>(updated roughly every 10 seconds)</Text>
-                    ): null
+                bpmOff ? (
+                    null
+                    ): <Text style = {styles.bpm_footnote}>(updated roughly every 10 seconds)</Text>
             }
             {
-                SPMDisplay ? (
-                    <Text style = {styles.bpm}>{bpm}</Text>
+                bpmOff ? (
+                    null
+                    ): <Text style = {styles.bpm}>{bpm}</Text>
+            }
+            {
+                bpmOff ? (
+                    <TouchableOpacity
+                        style={styles.start}
+                        onPress={() => setbpmOff(!bpmOff)}>
+                        <Text>START</Text>
+                    </TouchableOpacity>
                     ): null
             }
-            <TouchableOpacity>
-                <Text>wdwd</Text>
-            </TouchableOpacity>
             <StatusBar style="auto"/>
         </View>
     );
@@ -115,5 +119,19 @@ const styles = StyleSheet.create({
     bpm_footnote: {
         textAlign: 'center',
         color: 'white',
+    },
+    start: {
+        alignItems: 'center',
+        backgroundColor: '#06AF3C',
+        marginTop: 25,
+        height: 50,
+        width: 150,
+        marginLeft: 100,
+        borderTopRightRadius:  10,
+        borderBottomRightRadius: 10,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        justifyContent: 'center',
     }
 });
+//dwdw
